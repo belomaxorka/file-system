@@ -27,9 +27,19 @@
   "require": {
     "php": ">=8.1"
   },
+  "require-dev": {
+    "phpstan/phpstan": "^1.9",
+    "phpunit/phpunit": "10",
+    "symfony/var-dumper": "^6.2"
+  },
   "autoload": {
     "psr-4": {
       "belomaxorka\\Filesystem\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "belomaxorka\\Filesystem\\": "tests/"
     }
   },
   "config": {
@@ -37,10 +47,5 @@
     "optimize-autoloader": false
   },
   "minimum-stability": "stable",
-  "prefer-stable": true,
-  "require-dev": {
-    "phpstan/phpstan": "^1.9",
-    "phpunit/phpunit": "10",
-    "symfony/var-dumper": "^6.2"
-  }
+  "prefer-stable": true
 }
