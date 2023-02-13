@@ -1,0 +1,38 @@
+{
+  "name": "belomaxorka/file-system",
+  "description": "PHP library for file and directory management. Provides basic methods for the filesystem.",
+  "type": "library",
+  "homepage": "https://github.com/belomaxorka/file-system",
+  "keywords": [
+    "File",
+    "Filesystem library",
+    "File handler",
+    "PHP filesystem",
+    "PHP"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "belomaxorka",
+      "email": "roman25052006.kelesh@gmail.com",
+      "role": "Developer",
+      "homepage": "https://github.com/belomaxorka"
+    }
+  ],
+  "support": {
+    "email": "roman25052006.kelesh@gmail.com",
+    "issues": "https://github.com/belomaxorka/file-system/issues",
+    "source": "https://github.com/belomaxorka/file-system"
+  },
+  "autoload": {
+    "psr-4": {
+      "belomaxorka\\Filesystem\\": "src/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": false
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
