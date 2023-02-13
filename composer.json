@@ -24,6 +24,9 @@
     "issues": "https://github.com/belomaxorka/file-system/issues",
     "source": "https://github.com/belomaxorka/file-system"
   },
+  "require": {
+    "php": ">=8.1"
+  },
   "autoload": {
     "psr-4": {
       "belomaxorka\\Filesystem\\": "src/"
@@ -34,5 +37,10 @@
     "optimize-autoloader": false
   },
   "minimum-stability": "stable",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "require-dev": {
+    "phpstan/phpstan": "^1.9",
+    "phpunit/phpunit": "10",
+    "symfony/var-dumper": "^6.2"
+  }
 }
