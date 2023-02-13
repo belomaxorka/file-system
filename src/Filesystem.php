@@ -1,4 +1,11 @@
-<?php
+<?php declare(strict_types=1);
+
+namespace belomaxorka\Filesystem;
+
+use DirectoryIterator;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * PHP Filesystem - PHP library for file and directory management. Provides basic methods for the filesystem
@@ -8,14 +15,6 @@
  * @link https://github.com/belomaxorka/file-system
  * @license MIT
  */
-
-namespace belomaxorka\Filesystem;
-
-use DirectoryIterator;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-
 class Filesystem
 {
   /**
