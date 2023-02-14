@@ -62,4 +62,16 @@ class Filesystem
 
     return $files_array;
   }
+
+  /**
+   * Return true if directory is empty
+   *
+   * @param string $path
+   * @return bool
+   * @since v0.0.2
+   */
+  public static function isDirEmpty(string $path): bool
+  {
+    return !(new FilesystemIterator($path))->valid();
+  }
 }
