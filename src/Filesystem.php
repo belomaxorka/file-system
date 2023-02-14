@@ -27,9 +27,10 @@ class Filesystem
   public static function getDirSize(string $path): int
   {
     $bytes_total = 0;
-    $path = realpath($path);
 
-    if ($path !== false && $path != '' && file_exists($path) && is_dir($path)) {
+    clearstatcache();
+
+    if (file_exists($path) && is_dir($path)) {
       foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
         $bytes_total += $object->getSize();
       }
@@ -48,9 +49,10 @@ class Filesystem
   public static function getListOfFiles(string $path): array
   {
     $files_array = [];
-    $path = realpath($path);
 
-    if ($path !== false && $path != '' && file_exists($path) && is_dir($path)) {
+    clearstatcache();
+
+    if (file_exists($path) && is_dir($path)) {
       foreach (new DirectoryIterator($path) as $file) {
         if ($file->isFile()) {
           $files_array[] = $file->getFilename();
