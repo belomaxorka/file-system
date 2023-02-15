@@ -62,21 +62,22 @@ class Filesystem
   }
 
   /**
-   * Returns directory files list as array
+   * Returns directory contents
    *
    * @param string $path
+   * @param bool $includeDirs
    * @param bool $needResetStat
    * @return array
    * @throws Exception
    * @since v0.0.1
    */
-  public static function getListOfFiles(string $path, bool $needResetStat = true): array
+  public static function getListOfDirContents(string $path, bool $includeDirs = false, bool $needResetStat = true): array
   {
     $files_array = [];
 
     if (self::isDirExists($path, $needResetStat)) {
       foreach (new DirectoryIterator($path) as $file) {
-        if ($file->isFile()) {
+        if ($file->isFile() || ($includeDirs && $file->isDir() && !$file->isDot())) {
           $files_array[] = $file->getFilename();
         }
       }
