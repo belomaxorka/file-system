@@ -44,6 +44,24 @@ class Filesystem
   }
 
   /**
+   * Return size of file
+   *
+   * @param string $path
+   * @param bool $needResetStat
+   * @return int
+   * @throws Exception
+   * @since v0.0.2
+   */
+  public static function getFileSize(string $path, bool $needResetStat = true): int
+  {
+    if (self::isFileExists($path, $needResetStat)) {
+      return (int)filesize($path);
+    } else {
+      throw new Exception(Exceptions::fileNotFound($path));
+    }
+  }
+
+  /**
    * Returns directory files list as array
    *
    * @param string $path
