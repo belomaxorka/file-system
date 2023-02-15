@@ -32,11 +32,7 @@ class Filesystem
   {
     $bytes_total = 0;
 
-    if ($needResetStat) {
-      clearstatcache();
-    }
-
-    if (file_exists($path) && is_dir($path)) {
+    if (self::isDirExists($path, $needResetStat)) {
       foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
         $bytes_total += $object->getSize();
       }
@@ -60,11 +56,7 @@ class Filesystem
   {
     $files_array = [];
 
-    if ($needResetStat) {
-      clearstatcache();
-    }
-
-    if (file_exists($path) && is_dir($path)) {
+    if (self::isDirExists($path, $needResetStat)) {
       foreach (new DirectoryIterator($path) as $file) {
         if ($file->isFile()) {
           $files_array[] = $file->getFilename();
@@ -88,14 +80,72 @@ class Filesystem
    */
   public static function isDirEmpty(string $path, bool $needResetStat = true): bool
   {
+    if (self::isDirExists($path, $needResetStat)) {
+      return !(new FilesystemIterator($path))->valid();
+    } else {
+      throw new Exception(Exceptions::folderNotFound($path));
+    }
+  }
+
+  /**
+   * Return true if file is empty
+   *
+   * @param string $path
+   * @param bool $needResetStat
+   * @return bool
+   * @throws Exception
+   * @since v0.0.2
+   */
+  public static function isFileEmpty(string $path, bool $needResetStat = true): bool
+  {
+    if (self::isFileExists($path, $needResetStat)) {
+      return ((int)filesize($path) === 0);
+    } else {
+      throw new Exception(Exceptions::fileNotFound($path));
+    }
+  }
+
+  /**
+   * Return true if directory exists
+   *
+   * @param string $path
+   * @param bool $needResetStat
+   * @return bool
+   * @throws Exception
+   * @since v0.0.2
+   */
+  public static function isDirExists(string $path, bool $needResetStat = true): bool
+  {
     if ($needResetStat) {
       clearstatcache();
     }
 
     if (file_exists($path) && is_dir($path)) {
-      return !(new FilesystemIterator($path))->valid();
+      return true;
     } else {
-      throw new Exception(Exceptions::folderNotFound($path));
+      return false;
+    }
+  }
+
+  /**
+   * Return true if file exists
+   *
+   * @param string $path
+   * @param bool $needResetStat
+   * @return bool
+   * @throws Exception
+   * @since v0.0.2
+   */
+  public static function isFileExists(string $path, bool $needResetStat = true): bool
+  {
+    if ($needResetStat) {
+      clearstatcache();
+    }
+
+    if (file_exists($path) && is_file($path)) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
