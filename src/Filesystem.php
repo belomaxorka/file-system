@@ -7,6 +7,8 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+use Exception;
+
 /**
  * PHP Filesystem - PHP library for file and directory management. Provides basic methods for the filesystem
  *
@@ -23,6 +25,7 @@ class Filesystem
    * @param string $path
    * @param bool $needResetStat
    * @return int
+   * @throws Exception
    * @since v0.0.1
    */
   public static function getDirSize(string $path, bool $needResetStat = true): int
@@ -37,6 +40,8 @@ class Filesystem
       foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
         $bytes_total += $object->getSize();
       }
+    } else {
+      throw new Exception(Exceptions::folderNotFound($path));
     }
 
     return $bytes_total;
@@ -48,6 +53,7 @@ class Filesystem
    * @param string $path
    * @param bool $needResetStat
    * @return array
+   * @throws Exception
    * @since v0.0.1
    */
   public static function getListOfFiles(string $path, bool $needResetStat = true): array
@@ -64,6 +70,8 @@ class Filesystem
           $files_array[] = $file->getFilename();
         }
       }
+    } else {
+      throw new Exception(Exceptions::folderNotFound($path));
     }
 
     return $files_array;
@@ -75,6 +83,7 @@ class Filesystem
    * @param string $path
    * @param bool $needResetStat
    * @return bool
+   * @throws Exception
    * @since v0.0.2
    */
   public static function isDirEmpty(string $path, bool $needResetStat = true): bool
@@ -85,6 +94,8 @@ class Filesystem
 
     if (file_exists($path) && is_dir($path)) {
       return !(new FilesystemIterator($path))->valid();
+    } else {
+      throw new Exception(Exceptions::folderNotFound($path));
     }
   }
 }
