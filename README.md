@@ -11,3 +11,8 @@
 
 <hr>
 
+## License
+
+This repository is licensed under the [MIT License](LICENSE).
+
+Copyright © 2023, [belomaxorka](https://github.com/belomaxorka)
