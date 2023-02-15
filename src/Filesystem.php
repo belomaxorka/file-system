@@ -32,7 +32,7 @@ class Filesystem
   public static function makeDir(string $path, int $mode = 0777, bool $needResetStat = true): bool
   {
     if (!self::isDirExists($path, $needResetStat)) {
-      return mkdir($path, $mode);
+      return mkdir($path, $mode, true);
     }
 
     throw new Exception(Exceptions::folderAlreadyExists($path));
