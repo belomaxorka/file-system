@@ -29,4 +29,22 @@ class Exceptions
 
     return $message;
   }
+
+  /**
+   * "File not found" Exception
+   *
+   * @param string $path
+   * @return string
+   * @since v0.0.2
+   */
+  public static function fileNotFound(string $path): string
+  {
+    if (empty($path)) {
+      $message = 'File could not be found.';
+    } else {
+      $message = sprintf('File (%s) could not be found.', $path);
+    }
+
+    return $message;
+  }
 }
