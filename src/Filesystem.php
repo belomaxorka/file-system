@@ -20,6 +20,25 @@ use Exception;
 class Filesystem
 {
   /**
+   * Make directory
+   *
+   * @param string $path
+   * @param int $mode
+   * @param bool $needResetStat
+   * @return bool
+   * @throws Exception
+   * @since v0.0.2
+   */
+  public static function makeDir(string $path, int $mode = 0777, bool $needResetStat = true): bool
+  {
+    if (!self::isDirExists($path, $needResetStat)) {
+      return mkdir($path, $mode);
+    }
+
+    throw new Exception(Exceptions::folderAlreadyExists($path));
+  }
+
+  /**
    * Return size of directory
    *
    * @param string $path

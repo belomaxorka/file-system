@@ -47,4 +47,22 @@ class Exceptions
 
     return $message;
   }
+
+  /**
+   * "Folder already exists" Exception
+   *
+   * @param string $path
+   * @return string
+   * @since v0.0.2
+   */
+  public static function folderAlreadyExists(string $path): string
+  {
+    if (empty($path)) {
+      $message = 'Folder already exists.';
+    } else {
+      $message = sprintf('Folder (%s) already exists.', $path);
+    }
+
+    return $message;
+  }
 }
