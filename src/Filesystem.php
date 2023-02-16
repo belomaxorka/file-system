@@ -53,12 +53,13 @@ class Filesystem extends Exceptions
    * Return size of directory
    *
    * @param string $dirname
+   * @param bool $humanFormat
    * @param bool $needResetStat
-   * @return int
+   * @return int|string
    * @throws Exception
    * @since v0.0.1
    */
-  public static function getDirSize(string $dirname, bool $needResetStat = true): int
+  public static function getDirSize(string $dirname, bool $humanFormat = false, bool $needResetStat = true): int|string
   {
     $bytesTotal = 0;
 
@@ -70,22 +71,23 @@ class Filesystem extends Exceptions
       throw new Exception(parent::folderNotFound($dirname));
     }
 
-    return $bytesTotal;
+    return $humanFormat ? self::humanFormatSize($bytesTotal) : $bytesTotal;
   }
 
   /**
    * Return size of file
    *
    * @param string $filename
+   * @param bool $humanFormat
    * @param bool $needResetStat
-   * @return int
+   * @return int|string
    * @throws Exception
    * @since v0.0.2
    */
-  public static function getFileSize(string $filename, bool $needResetStat = true): int
+  public static function getFileSize(string $filename, bool $humanFormat = false, bool $needResetStat = true): int|string
   {
     if (self::isFileExists($filename, $needResetStat)) {
-      return (int)filesize($filename);
+      return $humanFormat ? self::humanFormatSize((int)filesize($filename)) : (int)filesize($filename);
     } else {
       throw new Exception(parent::fileNotFound($filename));
     }
