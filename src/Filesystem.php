@@ -7,6 +7,10 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
+use belomaxorka\Filesystem\Exceptions\FolderAlreadyExistsException;
+use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
+
 /**
  * PHP Filesystem - PHP library for file and directory management. Provides basic methods for the filesystem
  *
@@ -35,7 +39,7 @@ class Filesystem
    * @param int $mode
    * @param bool $needResetStat
    * @return bool
-   * @throws FilesystemException
+   * @throws FolderAlreadyExistsException
    * @since v0.0.2
    */
   public static function makeDir(string $dirname, int $mode = 0777, bool $needResetStat = true): bool
@@ -44,7 +48,7 @@ class Filesystem
       return mkdir($dirname, $mode, true);
     }
 
-    throw new FilesystemException('folderAlreadyExists');
+    throw new FolderAlreadyExistsException($dirname);
   }
 
   /**
@@ -54,7 +58,7 @@ class Filesystem
    * @param bool $humanFormat
    * @param bool $needResetStat
    * @return int|string
-   * @throws FilesystemException
+   * @throws FolderNotFoundException
    * @since v0.0.1
    */
   public static function getDirSize(string $dirname, bool $humanFormat = false, bool $needResetStat = true): int|string
@@ -66,7 +70,7 @@ class Filesystem
         $bytesTotal += $object->getSize();
       }
     } else {
-      throw new FilesystemException('folderNotFound');
+      throw new FolderNotFoundException($dirname);
     }
 
     return $humanFormat ? self::humanFormatSize($bytesTotal) : $bytesTotal;
@@ -79,7 +83,7 @@ class Filesystem
    * @param bool $humanFormat
    * @param bool $needResetStat
    * @return int|string
-   * @throws FilesystemException
+   * @throws FileNotFoundException
    * @since v0.0.2
    */
   public static function getFileSize(string $filename, bool $humanFormat = false, bool $needResetStat = true): int|string
@@ -87,7 +91,7 @@ class Filesystem
     if (self::isFileExists($filename, $needResetStat)) {
       return $humanFormat ? self::humanFormatSize((int)filesize($filename)) : (int)filesize($filename);
     } else {
-      throw new FilesystemException('fileNotFound');
+      throw new FileNotFoundException($filename);
     }
   }
 
@@ -98,7 +102,7 @@ class Filesystem
    * @param bool $includeDirs
    * @param bool $needResetStat
    * @return array
-   * @throws FilesystemException
+   * @throws FolderNotFoundException
    * @since v0.0.1
    */
   public static function getListOfDirContents(string $dirname, bool $includeDirs = false, bool $needResetStat = true): array
@@ -112,7 +116,7 @@ class Filesystem
         }
       }
     } else {
-      throw new FilesystemException('folderNotFound');
+      throw new FolderNotFoundException($dirname);
     }
 
     return $filesArray;
@@ -139,7 +143,7 @@ class Filesystem
    * @param string $dirname
    * @param bool $needResetStat
    * @return bool
-   * @throws FilesystemException
+   * @throws FolderNotFoundException
    * @since v0.0.2
    */
   public static function isDirEmpty(string $dirname, bool $needResetStat = true): bool
@@ -147,7 +151,7 @@ class Filesystem
     if (self::isDirExists($dirname, $needResetStat)) {
       return !(new FilesystemIterator($dirname))->valid();
     } else {
-      throw new FilesystemException('folderNotFound');
+      throw new FolderNotFoundException($dirname);
     }
   }
 
@@ -157,7 +161,7 @@ class Filesystem
    * @param string $filename
    * @param bool $needResetStat
    * @return bool
-   * @throws FilesystemException
+   * @throws FileNotFoundException
    * @since v0.0.2
    */
   public static function isFileEmpty(string $filename, bool $needResetStat = true): bool
@@ -165,7 +169,7 @@ class Filesystem
     if (self::isFileExists($filename, $needResetStat)) {
       return ((int)filesize($filename) === 0);
     } else {
-      throw new FilesystemException('fileNotFound');
+      throw new FileNotFoundException($filename);
     }
   }
 
