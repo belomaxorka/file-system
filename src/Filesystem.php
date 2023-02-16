@@ -13,12 +13,23 @@ use Exception;
  * PHP Filesystem - PHP library for file and directory management. Provides basic methods for the filesystem
  *
  * @author belomaxorka
- * @version v0.0.2
+ * @version v0.0.3
  * @link https://github.com/belomaxorka/file-system
  * @license MIT
  */
 class Filesystem extends Exceptions
 {
+  /**
+   * Params for humanFormatSize method
+   *
+   * @since v0.0.3
+   */
+  private const HUMAN_FORMAT_SIZE = [
+    'BYTE_UNITS' => ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+    'BYTE_PRECISION' => [0, 0, 1, 2, 2, 3, 3, 4, 4],
+    'BYTE_NEXT' => 1024
+  ];
+
   /**
    * Make directory
    *
@@ -105,6 +116,21 @@ class Filesystem extends Exceptions
     }
 
     return $filesArray;
+  }
+
+  /**
+   * Convert bytes to be human-readable.
+   *
+   * @param int $bytes
+   * @param int|null $precision
+   * @return string
+   * @since v0.0.3
+   */
+  public static function humanFormatSize(int $bytes, int $precision = null): string
+  {
+    for ($i = 0; ($bytes / self::HUMAN_FORMAT_SIZE['BYTE_NEXT']) >= 0.9 && $i < count(self::HUMAN_FORMAT_SIZE['BYTE_UNITS']); $i++) $bytes /= self::HUMAN_FORMAT_SIZE['BYTE_NEXT'];
+
+    return round($bytes, is_null($precision) ? self::HUMAN_FORMAT_SIZE['BYTE_PRECISION'][$i] : $precision) . self::HUMAN_FORMAT_SIZE['BYTE_UNITS'][$i];
   }
 
   /**
