@@ -10,6 +10,7 @@ use RecursiveIteratorIterator;
 use belomaxorka\Filesystem\Exceptions\FileCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
 use belomaxorka\Filesystem\Exceptions\FolderAlreadyExistsException;
+use belomaxorka\Filesystem\Exceptions\FolderCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
 
 /**
@@ -40,16 +41,20 @@ class Filesystem
    * @param int $mode Permissions (Linux)
    * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
-   * @throws FolderAlreadyExistsException
+   * @throws FolderCannotRemovedException|FolderAlreadyExistsException
    * @since v0.0.2
    */
   public static function makeDir(string $dirname, int $mode = 0777, bool $needResetStat = true): bool
   {
-    if (!self::isDirExists($dirname, $needResetStat)) {
-      return mkdir($dirname, $mode, true);
+    if (self::isDirExists($dirname, $needResetStat)) {
+      throw new FolderAlreadyExistsException($dirname);
     }
 
-    throw new FolderAlreadyExistsException($dirname);
+    if (mkdir($dirname, $mode, true)) {
+      return true;
+    }
+
+    throw new FolderCannotRemovedException($dirname);
   }
 
   /**
@@ -63,15 +68,15 @@ class Filesystem
    */
   public static function removeFile(string $filename, bool $needResetStat = true): bool
   {
-    if (self::isFileExists($filename, $needResetStat)) {
-      if (unlink($filename)) {
-        return true;
-      }
-
-      throw new FileCannotRemovedException($filename);
+    if (!self::isFileExists($filename, $needResetStat)) {
+      throw new FileNotFoundException($filename);
     }
 
-    throw new FileNotFoundException($filename);
+    if (unlink($filename)) {
+      return true;
+    }
+
+    throw new FileCannotRemovedException($filename);
   }
 
   /**
@@ -86,17 +91,17 @@ class Filesystem
    */
   public static function getDirSize(string $dirname, bool $humanFormat = false, bool $needResetStat = true): int|string
   {
-    if (self::isDirExists($dirname, $needResetStat)) {
-      $bytesTotal = 0;
-
-      foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
-        $bytesTotal += $object->getSize();
-      }
-
-      return $humanFormat ? self::humanFormatSize($bytesTotal) : $bytesTotal;
+    if (!self::isDirExists($dirname, $needResetStat)) {
+      throw new FolderNotFoundException($dirname);
     }
 
-    throw new FolderNotFoundException($dirname);
+    $bytesTotal = 0;
+
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
+      $bytesTotal += $object->getSize();
+    }
+
+    return ($humanFormat ? self::humanFormatSize($bytesTotal) : $bytesTotal);
   }
 
   /**
@@ -111,11 +116,11 @@ class Filesystem
    */
   public static function getFileSize(string $filename, bool $humanFormat = false, bool $needResetStat = true): int|string
   {
-    if (self::isFileExists($filename, $needResetStat)) {
-      return $humanFormat ? self::humanFormatSize((int)filesize($filename)) : (int)filesize($filename);
+    if (!self::isFileExists($filename, $needResetStat)) {
+      throw new FileNotFoundException($filename);
     }
 
-    throw new FileNotFoundException($filename);
+    return ($humanFormat ? self::humanFormatSize((int)filesize($filename)) : (int)filesize($filename));
   }
 
   /**
@@ -130,19 +135,19 @@ class Filesystem
    */
   public static function getListOfDirContents(string $dirname, bool $includeDirs = false, bool $needResetStat = true): array
   {
-    if (self::isDirExists($dirname, $needResetStat)) {
-      $filesArray = [];
-
-      foreach (new DirectoryIterator($dirname) as $file) {
-        if ($file->isFile() || ($includeDirs && $file->isDir() && !$file->isDot())) {
-          $filesArray[] = $file->getFilename();
-        }
-      }
-
-      return $filesArray;
+    if (!self::isDirExists($dirname, $needResetStat)) {
+      throw new FolderNotFoundException($dirname);
     }
 
-    throw new FolderNotFoundException($dirname);
+    $filesArray = [];
+
+    foreach (new DirectoryIterator($dirname) as $file) {
+      if ($file->isFile() || ($includeDirs && $file->isDir() && !$file->isDot())) {
+        $filesArray[] = $file->getFilename();
+      }
+    }
+
+    return $filesArray;
   }
 
   /**
@@ -155,9 +160,11 @@ class Filesystem
    */
   public static function humanFormatSize(int $bytes, int $precision = null): string
   {
-    for ($i = 0; ($bytes / self::HUMAN_FORMAT_SIZE['BYTE_NEXT']) >= 0.9 && $i < count(self::HUMAN_FORMAT_SIZE['BYTE_UNITS']); $i++) $bytes /= self::HUMAN_FORMAT_SIZE['BYTE_NEXT'];
+    for ($i = 0; ($bytes / self::HUMAN_FORMAT_SIZE['BYTE_NEXT']) >= 0.9 && $i < count(self::HUMAN_FORMAT_SIZE['BYTE_UNITS']); $i++) {
+      $bytes /= self::HUMAN_FORMAT_SIZE['BYTE_NEXT'];
+    }
 
-    return round($bytes, is_null($precision) ? self::HUMAN_FORMAT_SIZE['BYTE_PRECISION'][$i] : $precision) . self::HUMAN_FORMAT_SIZE['BYTE_UNITS'][$i];
+    return (round($bytes, is_null($precision) ? self::HUMAN_FORMAT_SIZE['BYTE_PRECISION'][$i] : $precision) . self::HUMAN_FORMAT_SIZE['BYTE_UNITS'][$i]);
   }
 
   /**
@@ -171,11 +178,11 @@ class Filesystem
    */
   public static function isDirEmpty(string $dirname, bool $needResetStat = true): bool
   {
-    if (self::isDirExists($dirname, $needResetStat)) {
-      return !(new FilesystemIterator($dirname))->valid();
+    if (!self::isDirExists($dirname, $needResetStat)) {
+      throw new FolderNotFoundException($dirname);
     }
 
-    throw new FolderNotFoundException($dirname);
+    return !(new FilesystemIterator($dirname))->valid();
   }
 
   /**
@@ -189,11 +196,11 @@ class Filesystem
    */
   public static function isFileEmpty(string $filename, bool $needResetStat = true): bool
   {
-    if (self::isFileExists($filename, $needResetStat)) {
-      return ((int)filesize($filename) === 0);
+    if (!self::isFileExists($filename, $needResetStat)) {
+      throw new FileNotFoundException($filename);
     }
 
-    throw new FileNotFoundException($filename);
+    return ((int)filesize($filename) === 0);
   }
 
   /**
