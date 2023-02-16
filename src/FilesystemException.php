@@ -31,11 +31,13 @@ class FilesystemException extends Exception
    * FilesystemException constructor
    *
    * @param string $message
-   * @param Throwable|null $previous
    * @since v0.0.3
    */
-  public function __construct(string $message, Throwable $previous = null)
+  public function __construct(string $message)
   {
-    parent::__construct((in_array($message, self::EXCEPTIONS_LIST) ? self::EXCEPTIONS_LIST[$message] : $message), 0, $previous);
+    parent::__construct(
+      array_key_exists($message, self::EXCEPTIONS_LIST) ?
+        self::EXCEPTIONS_LIST[$message] : $message
+    );
   }
 }
