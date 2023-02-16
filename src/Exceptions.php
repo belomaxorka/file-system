@@ -15,16 +15,16 @@ class Exceptions
   /**
    * "Folder not found" Exception
    *
-   * @param string $path
+   * @param string $dirname
    * @return string
    * @since v0.0.2
    */
-  public static function folderNotFound(string $path): string
+  public static function folderNotFound(string $dirname): string
   {
-    if (empty($path)) {
+    if (empty($dirname)) {
       $message = 'Folder could not be found.';
     } else {
-      $message = sprintf('Folder (%s) could not be found.', $path);
+      $message = sprintf('Folder (%s) could not be found.', $dirname);
     }
 
     return $message;
@@ -33,16 +33,16 @@ class Exceptions
   /**
    * "File not found" Exception
    *
-   * @param string $path
+   * @param string $filename
    * @return string
    * @since v0.0.2
    */
-  public static function fileNotFound(string $path): string
+  public static function fileNotFound(string $filename): string
   {
-    if (empty($path)) {
+    if (empty($filename)) {
       $message = 'File could not be found.';
     } else {
-      $message = sprintf('File (%s) could not be found.', $path);
+      $message = sprintf('File (%s) could not be found.', $filename);
     }
 
     return $message;
@@ -51,16 +51,16 @@ class Exceptions
   /**
    * "Folder already exists" Exception
    *
-   * @param string $path
+   * @param string $dirname
    * @return string
    * @since v0.0.2
    */
-  public static function folderAlreadyExists(string $path): string
+  public static function folderAlreadyExists(string $dirname): string
   {
-    if (empty($path)) {
+    if (empty($dirname)) {
       $message = 'Folder already exists.';
     } else {
-      $message = sprintf('Folder (%s) already exists.', $path);
+      $message = sprintf('Folder (%s) already exists.', $dirname);
     }
 
     return $message;
