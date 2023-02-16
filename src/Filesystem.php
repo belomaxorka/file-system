@@ -35,9 +35,9 @@ class Filesystem
   /**
    * Make directory
    *
-   * @param string $dirname
-   * @param int $mode
-   * @param bool $needResetStat
+   * @param string $dirname Name of new folder
+   * @param int $mode Permissions (Linux)
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderAlreadyExistsException
    * @since v0.0.2
@@ -54,9 +54,9 @@ class Filesystem
   /**
    * Return size of directory
    *
-   * @param string $dirname
-   * @param bool $humanFormat
-   * @param bool $needResetStat
+   * @param string $dirname Name of target folder
+   * @param bool $humanFormat Use human-readable file size
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return int|string
    * @throws FolderNotFoundException
    * @since v0.0.1
@@ -79,9 +79,9 @@ class Filesystem
   /**
    * Return size of file
    *
-   * @param string $filename
-   * @param bool $humanFormat
-   * @param bool $needResetStat
+   * @param string $filename Name of target file
+   * @param bool $humanFormat Use human-readable file size
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return int|string
    * @throws FileNotFoundException
    * @since v0.0.2
@@ -98,9 +98,9 @@ class Filesystem
   /**
    * Returns directory contents
    *
-   * @param string $dirname
-   * @param bool $includeDirs
-   * @param bool $needResetStat
+   * @param string $dirname Name of target folder
+   * @param bool $includeDirs Include folders in result
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return array
    * @throws FolderNotFoundException
    * @since v0.0.1
@@ -125,8 +125,8 @@ class Filesystem
   /**
    * Convert bytes to be human-readable.
    *
-   * @param int $bytes
-   * @param int|null $precision
+   * @param int $bytes Size in bytes
+   * @param int|null $precision Precision of rounding size
    * @return string
    * @since v0.0.3
    */
@@ -140,8 +140,8 @@ class Filesystem
   /**
    * Return true if directory is empty
    *
-   * @param string $dirname
-   * @param bool $needResetStat
+   * @param string $dirname Name of target folder
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderNotFoundException
    * @since v0.0.2
@@ -158,8 +158,8 @@ class Filesystem
   /**
    * Return true if file is empty
    *
-   * @param string $filename
-   * @param bool $needResetStat
+   * @param string $filename Name of target file
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FileNotFoundException
    * @since v0.0.2
@@ -176,8 +176,8 @@ class Filesystem
   /**
    * Return true if directory exists
    *
-   * @param string $dirname
-   * @param bool $needResetStat
+   * @param string $dirname Name of target folder
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @since v0.0.2
    */
@@ -197,8 +197,8 @@ class Filesystem
   /**
    * Return true if file exists
    *
-   * @param string $filename
-   * @param bool $needResetStat
+   * @param string $filename Name of target file
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @since v0.0.2
    */

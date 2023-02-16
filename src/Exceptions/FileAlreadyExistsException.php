@@ -17,7 +17,7 @@ class FileAlreadyExistsException extends Exception
   /**
    * FileAlreadyExistsException constructor
    *
-   * @param string|bool $path
+   * @param string|bool $path Include path to file in error message
    * @since v0.0.3
    */
   public function __construct($path = false)
