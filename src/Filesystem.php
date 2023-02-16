@@ -63,17 +63,17 @@ class Filesystem
    */
   public static function getDirSize(string $dirname, bool $humanFormat = false, bool $needResetStat = true): int|string
   {
-    $bytesTotal = 0;
-
     if (self::isDirExists($dirname, $needResetStat)) {
+      $bytesTotal = 0;
+
       foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
         $bytesTotal += $object->getSize();
       }
-    } else {
-      throw new FolderNotFoundException($dirname);
+
+      return $humanFormat ? self::humanFormatSize($bytesTotal) : $bytesTotal;
     }
 
-    return $humanFormat ? self::humanFormatSize($bytesTotal) : $bytesTotal;
+    throw new FolderNotFoundException($dirname);
   }
 
   /**
@@ -90,9 +90,9 @@ class Filesystem
   {
     if (self::isFileExists($filename, $needResetStat)) {
       return $humanFormat ? self::humanFormatSize((int)filesize($filename)) : (int)filesize($filename);
-    } else {
-      throw new FileNotFoundException($filename);
     }
+
+    throw new FileNotFoundException($filename);
   }
 
   /**
@@ -107,19 +107,19 @@ class Filesystem
    */
   public static function getListOfDirContents(string $dirname, bool $includeDirs = false, bool $needResetStat = true): array
   {
-    $filesArray = [];
-
     if (self::isDirExists($dirname, $needResetStat)) {
+      $filesArray = [];
+
       foreach (new DirectoryIterator($dirname) as $file) {
         if ($file->isFile() || ($includeDirs && $file->isDir() && !$file->isDot())) {
           $filesArray[] = $file->getFilename();
         }
       }
-    } else {
-      throw new FolderNotFoundException($dirname);
+
+      return $filesArray;
     }
 
-    return $filesArray;
+    throw new FolderNotFoundException($dirname);
   }
 
   /**
@@ -150,9 +150,9 @@ class Filesystem
   {
     if (self::isDirExists($dirname, $needResetStat)) {
       return !(new FilesystemIterator($dirname))->valid();
-    } else {
-      throw new FolderNotFoundException($dirname);
     }
+
+    throw new FolderNotFoundException($dirname);
   }
 
   /**
@@ -168,9 +168,9 @@ class Filesystem
   {
     if (self::isFileExists($filename, $needResetStat)) {
       return ((int)filesize($filename) === 0);
-    } else {
-      throw new FileNotFoundException($filename);
     }
+
+    throw new FileNotFoundException($filename);
   }
 
   /**
@@ -187,11 +187,15 @@ class Filesystem
       clearstatcache();
     }
 
-    if (file_exists($dirname) && is_dir($dirname)) {
-      return true;
-    } else {
+    if (is_dir($dirname)) {
+      if (file_exists($dirname)) {
+        return true;
+      }
+
       return false;
     }
+
+    return false;
   }
 
   /**
@@ -208,10 +212,14 @@ class Filesystem
       clearstatcache();
     }
 
-    if (file_exists($filename) && is_file($filename)) {
-      return true;
-    } else {
+    if (is_file($filename)) {
+      if (file_exists($filename)) {
+        return true;
+      }
+
       return false;
     }
+
+    return false;
   }
 }
