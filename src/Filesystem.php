@@ -17,7 +17,7 @@ use Exception;
  * @link https://github.com/belomaxorka/file-system
  * @license MIT
  */
-class Filesystem
+class Filesystem extends Exceptions
 {
   /**
    * Make directory

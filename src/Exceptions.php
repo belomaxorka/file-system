@@ -19,7 +19,7 @@ class Exceptions
    * @return string
    * @since v0.0.2
    */
-  public static function folderNotFound(string $dirname): string
+  protected static function folderNotFound(string $dirname): string
   {
     if (empty($dirname)) {
       $message = 'Folder could not be found.';
@@ -37,7 +37,7 @@ class Exceptions
    * @return string
    * @since v0.0.2
    */
-  public static function fileNotFound(string $filename): string
+  protected static function fileNotFound(string $filename): string
   {
     if (empty($filename)) {
       $message = 'File could not be found.';
@@ -55,7 +55,7 @@ class Exceptions
    * @return string
    * @since v0.0.2
    */
-  public static function folderAlreadyExists(string $dirname): string
+  protected static function folderAlreadyExists(string $dirname): string
   {
     if (empty($dirname)) {
       $message = 'Folder already exists.';
