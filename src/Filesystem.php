@@ -7,6 +7,7 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+use belomaxorka\Filesystem\Exceptions\FileCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
 use belomaxorka\Filesystem\Exceptions\FolderAlreadyExistsException;
 use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
@@ -49,6 +50,28 @@ class Filesystem
     }
 
     throw new FolderAlreadyExistsException($dirname);
+  }
+
+  /**
+   * Remove file
+   *
+   * @param string $filename Name of target file
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   * @return bool
+   * @throws FileCannotRemovedException|FileNotFoundException
+   * @since v0.0.3
+   */
+  public static function removeFile(string $filename, bool $needResetStat = true): bool
+  {
+    if (self::isFileExists($filename, $needResetStat)) {
+      if (unlink($filename)) {
+        return true;
+      }
+
+      throw new FileCannotRemovedException($filename);
+    }
+
+    throw new FileNotFoundException($filename);
   }
 
   /**
