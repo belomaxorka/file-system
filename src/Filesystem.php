@@ -35,7 +35,7 @@ class Filesystem extends Exceptions
       return mkdir($dirname, $mode, true);
     }
 
-    throw new Exception(Exceptions::folderAlreadyExists($dirname));
+    throw new Exception(parent::folderAlreadyExists($dirname));
   }
 
   /**
@@ -56,7 +56,7 @@ class Filesystem extends Exceptions
         $bytesTotal += $object->getSize();
       }
     } else {
-      throw new Exception(Exceptions::folderNotFound($dirname));
+      throw new Exception(parent::folderNotFound($dirname));
     }
 
     return $bytesTotal;
@@ -76,7 +76,7 @@ class Filesystem extends Exceptions
     if (self::isFileExists($filename, $needResetStat)) {
       return (int)filesize($filename);
     } else {
-      throw new Exception(Exceptions::fileNotFound($filename));
+      throw new Exception(parent::fileNotFound($filename));
     }
   }
 
@@ -101,7 +101,7 @@ class Filesystem extends Exceptions
         }
       }
     } else {
-      throw new Exception(Exceptions::folderNotFound($dirname));
+      throw new Exception(parent::folderNotFound($dirname));
     }
 
     return $filesArray;
@@ -121,7 +121,7 @@ class Filesystem extends Exceptions
     if (self::isDirExists($dirname, $needResetStat)) {
       return !(new FilesystemIterator($dirname))->valid();
     } else {
-      throw new Exception(Exceptions::folderNotFound($dirname));
+      throw new Exception(parent::folderNotFound($dirname));
     }
   }
 
@@ -139,7 +139,7 @@ class Filesystem extends Exceptions
     if (self::isFileExists($filename, $needResetStat)) {
       return ((int)filesize($filename) === 0);
     } else {
-      throw new Exception(Exceptions::fileNotFound($filename));
+      throw new Exception(parent::fileNotFound($filename));
     }
   }
 
