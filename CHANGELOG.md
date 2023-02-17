@@ -1,5 +1,19 @@
 # Change Log
 
+## [v0.0.3](https://github.com/torrentpier/torrentpier/tree/v0.0.3) (2023-02-17)
+
+[Full Changelog](https://github.com/torrentpier/torrentpier/compare/v0.0.2...v0.0.3)
+
+- Added methods list in README
+- Added isFileWritable & isFileReadable methods
+- Added isDirWritable & isDirReadable methods
+- Added removeFile method
+- Added humanFormatSize method
+- Added $humanFormat argument for getDirSize & getFileSize
+- Minor adjustments
+- Updated PHPDocs for all methods
+- Reworked exceptions
+
 ## [v0.0.2](https://github.com/torrentpier/torrentpier/tree/v0.0.2) (2023-02-16)
 
 [Full Changelog](https://github.com/torrentpier/torrentpier/compare/v0.0.1...v0.0.2)
