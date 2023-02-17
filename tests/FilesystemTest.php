@@ -63,6 +63,18 @@ final class FilesystemTest extends TestCase
   }
 
   /**
+   * Folder is empty check
+   *
+   * @return void
+   * @throws Exception
+   * @since 0.0.4
+   */
+  public function testIsEmptyDir(): void
+  {
+    $this->assertTrue(self::$fileObject::isDirEmpty(self::FOLDER_EXAMPLE));
+  }
+
+  /**
    * Make file check
    *
    * @return void
@@ -73,6 +85,18 @@ final class FilesystemTest extends TestCase
   {
     $this->assertTrue(self::$fileObject::makeFile(self::FILE_EXAMPLE));
     $this->assertFileExists(self::FILE_EXAMPLE);
+  }
+
+  /**
+   * File is empty check
+   *
+   * @return void
+   * @throws Exception
+   * @since 0.0.4
+   */
+  public function testIsEmptyFile(): void
+  {
+    $this->assertTrue(self::$fileObject::isFileEmpty(self::FILE_EXAMPLE));
   }
 
   /**
