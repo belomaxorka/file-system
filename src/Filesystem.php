@@ -151,7 +151,7 @@ class Filesystem
   }
 
   /**
-   * Convert bytes to be human-readable.
+   * Convert bytes to be human-readable format.
    *
    * @param int $bytes Size in bytes
    * @param int|null $precision Precision of rounding size
@@ -165,6 +165,40 @@ class Filesystem
     }
 
     return (round($bytes, is_null($precision) ? self::HUMAN_FORMAT_SIZE['BYTE_PRECISION'][$i] : $precision) . self::HUMAN_FORMAT_SIZE['BYTE_UNITS'][$i]);
+  }
+
+  /**
+   * Return true if directory is writable
+   *
+   * @param string $dirname Name of target folder
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   * @return bool
+   * @throws FolderNotFoundException
+   */
+  public static function isDirWritable(string $dirname, bool $needResetStat = true): bool
+  {
+    if (!self::isDirExists($dirname, $needResetStat)) {
+      throw new FolderNotFoundException($dirname);
+    }
+
+    return is_writable($dirname);
+  }
+
+  /**
+   * Return true if directory is readable
+   *
+   * @param string $dirname Name of target folder
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   * @return bool
+   * @throws FolderNotFoundException
+   */
+  public static function isDirReadable(string $dirname, bool $needResetStat = true): bool
+  {
+    if (!self::isDirExists($dirname, $needResetStat)) {
+      throw new FolderNotFoundException($dirname);
+    }
+
+    return is_readable($dirname);
   }
 
   /**
