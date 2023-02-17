@@ -1,7 +1,14 @@
 <?php declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
 use belomaxorka\Filesystem\Filesystem;
+
+use belomaxorka\Filesystem\Exceptions\FileAlreadyExistsException;
+use belomaxorka\Filesystem\Exceptions\FileCannotCreatedException;
+use belomaxorka\Filesystem\Exceptions\FileCannotRemovedException;
+use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
+use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
+
+use PHPUnit\Framework\TestCase;
 
 /**
  * PHP Filesystem - PHP library for file and directory management. Provides basic methods for the filesystem
@@ -66,7 +73,7 @@ final class FilesystemTest extends TestCase
    * Folder is empty check
    *
    * @return void
-   * @throws Exception
+   * @throws FolderNotFoundException
    * @since 0.0.4
    */
   public function testIsEmptyDir(): void
@@ -78,7 +85,7 @@ final class FilesystemTest extends TestCase
    * Make file check
    *
    * @return void
-   * @throws Exception
+   * @throws FileCannotCreatedException|FileNotFoundException|FileAlreadyExistsException|FileCannotRemovedException
    * @since 0.0.4
    */
   public function testMakeFile(): void
@@ -91,7 +98,7 @@ final class FilesystemTest extends TestCase
    * File is empty check
    *
    * @return void
-   * @throws Exception
+   * @throws FileNotFoundException
    * @since 0.0.4
    */
   public function testIsEmptyFile(): void
@@ -125,6 +132,20 @@ final class FilesystemTest extends TestCase
     $this->assertTrue(self::$fileObject::isDirExists(self::FOLDER_EXAMPLE));
     $this->assertFalse(self::$fileObject::isDirExists(self::FILE_EXAMPLE));
     $this->assertFalse(self::$fileObject::isDirExists((string)random_int(10, 100)));
+  }
+
+  /**
+   * Get list of files check
+   *
+   * @return void
+   * @throws FolderNotFoundException
+   * @since 0.0.4
+   */
+  public function testGetFilesList(): void
+  {
+    $this->assertIsArray(self::$fileObject::getListOfDirContents(self::FOLDER_EXAMPLE));
+    $this->assertNotEmpty(self::$fileObject::getListOfDirContents(self::FOLDER_EXAMPLE));
+    $this->assertEquals([basename(self::FILE_EXAMPLE)], self::$fileObject::getListOfDirContents(self::FOLDER_EXAMPLE));
   }
 
   /**
