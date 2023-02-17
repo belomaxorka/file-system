@@ -174,6 +174,7 @@ class Filesystem
    * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderNotFoundException
+   * @since v0.0.3
    */
   public static function isDirWritable(string $dirname, bool $needResetStat = true): bool
   {
@@ -191,6 +192,7 @@ class Filesystem
    * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderNotFoundException
+   * @since v0.0.3
    */
   public static function isDirReadable(string $dirname, bool $needResetStat = true): bool
   {
@@ -199,6 +201,42 @@ class Filesystem
     }
 
     return is_readable($dirname);
+  }
+
+  /**
+   * Return true if file is writable
+   *
+   * @param string $filename Name of target file
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   * @return bool
+   * @throws FileNotFoundException
+   * @since v0.0.3
+   */
+  public static function isFileWritable(string $filename, bool $needResetStat = true): bool
+  {
+    if (!self::isFileExists($filename, $needResetStat)) {
+      throw new FileNotFoundException($filename);
+    }
+
+    return is_writable($filename);
+  }
+
+  /**
+   * Return true if file is readable
+   *
+   * @param string $filename Name of target file
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   * @return bool
+   * @throws FileNotFoundException
+   * @since v0.0.3
+   */
+  public static function isFileReadable(string $filename, bool $needResetStat = true): bool
+  {
+    if (!self::isFileExists($filename, $needResetStat)) {
+      throw new FileNotFoundException($filename);
+    }
+
+    return is_readable($filename);
   }
 
   /**
