@@ -128,6 +128,19 @@ final class FilesystemTest extends TestCase
   }
 
   /**
+   * Remove file check
+   *
+   * @return void
+   * @throws Exception
+   * @since 0.0.4
+   */
+  public function testRemoveFile(): void
+  {
+    $this->assertTrue(self::$fileObject::removeFile(self::FILE_EXAMPLE));
+    $this->assertFileDoesNotExist(self::FILE_EXAMPLE);
+  }
+
+  /**
    * Unset instance
    *
    * @return void
