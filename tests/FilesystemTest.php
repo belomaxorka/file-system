@@ -44,6 +44,22 @@ final class FilesystemTest extends TestCase
   }
 
   /**
+   * Make folder check
+   *
+   * @return void
+   * @throws Exception
+   * @since 0.0.4
+   */
+  public function testMakeDir(): void
+  {
+    $filename = __DIR__ . '/example_' . md5((string)time());
+
+    // Make folder
+    $this->assertTrue(self::$fileObject::makeDir($filename));
+    $this->assertFileExists($filename);
+  }
+
+  /**
    * File exists check
    *
    * @return void
