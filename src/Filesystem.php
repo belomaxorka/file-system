@@ -7,8 +7,11 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+use belomaxorka\Filesystem\Exceptions\FileAlreadyExistsException;
 use belomaxorka\Filesystem\Exceptions\FileCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
+use belomaxorka\Filesystem\Exceptions\FileCannotCreatedException;
+
 use belomaxorka\Filesystem\Exceptions\FolderAlreadyExistsException;
 use belomaxorka\Filesystem\Exceptions\FolderCannotCreatedException;
 use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
@@ -33,6 +36,28 @@ class Filesystem
     'BYTE_PRECISION' => [0, 0, 1, 2, 2, 3, 3, 4, 4],
     'BYTE_NEXT' => 1024
   ];
+
+  /**
+   * Make file
+   *
+   * @param string $filename Name of new file
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   * @return bool
+   * @throws FileAlreadyExistsException|FileCannotCreatedException
+   * @since v0.0.4
+   */
+  public static function makeFile(string $filename, bool $needResetStat = true): bool
+  {
+    if (self::isFileExists($filename, $needResetStat)) {
+      throw new FileAlreadyExistsException($filename);
+    }
+
+    if (touch($filename)) {
+      return true;
+    }
+
+    throw new FileCannotCreatedException($filename);
+  }
 
   /**
    * Make directory
