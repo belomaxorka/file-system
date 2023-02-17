@@ -10,7 +10,7 @@ use RecursiveIteratorIterator;
 use belomaxorka\Filesystem\Exceptions\FileCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
 use belomaxorka\Filesystem\Exceptions\FolderAlreadyExistsException;
-use belomaxorka\Filesystem\Exceptions\FolderCannotRemovedException;
+use belomaxorka\Filesystem\Exceptions\FolderCannotCreatedException;
 use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
 
 /**
@@ -41,7 +41,7 @@ class Filesystem
    * @param int $mode Permissions (Linux)
    * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
-   * @throws FolderCannotRemovedException|FolderAlreadyExistsException
+   * @throws FolderAlreadyExistsException|FolderCannotCreatedException
    * @since v0.0.2
    */
   public static function makeDir(string $dirname, int $mode = 0777, bool $needResetStat = true): bool
@@ -54,7 +54,7 @@ class Filesystem
       return true;
     }
 
-    throw new FolderCannotRemovedException($dirname);
+    throw new FolderCannotCreatedException($dirname);
   }
 
   /**
