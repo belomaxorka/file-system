@@ -91,14 +91,12 @@ class Filesystem
    */
   public static function getDirSize(string $dirname, bool $humanFormat = false, bool $needResetStat = true): int|string
   {
-    if (!self::isDirExists($dirname, $needResetStat)) {
-      throw new FolderNotFoundException($dirname);
-    }
-
     $bytesTotal = 0;
 
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
-      $bytesTotal += $object->getSize();
+    if (!self::isDirEmpty($dirname, $needResetStat)) {
+      foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
+        $bytesTotal += $object->getSize();
+      }
     }
 
     return ($humanFormat ? self::humanFormatSize($bytesTotal) : $bytesTotal);
@@ -135,15 +133,13 @@ class Filesystem
    */
   public static function getListOfDirContents(string $dirname, bool $includeDirs = false, bool $needResetStat = true): array
   {
-    if (!self::isDirExists($dirname, $needResetStat)) {
-      throw new FolderNotFoundException($dirname);
-    }
-
     $filesArray = [];
 
-    foreach (new DirectoryIterator($dirname) as $file) {
-      if ($file->isFile() || ($includeDirs && $file->isDir() && !$file->isDot())) {
-        $filesArray[] = $file->getFilename();
+    if (!self::isDirEmpty($dirname, $needResetStat)) {
+      foreach (new DirectoryIterator($dirname) as $file) {
+        if ($file->isFile() || ($includeDirs && $file->isDir() && !$file->isDot())) {
+          $filesArray[] = $file->getFilename();
+        }
       }
     }
 
