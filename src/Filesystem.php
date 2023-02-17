@@ -41,14 +41,19 @@ class Filesystem
    * Make file
    *
    * @param string $filename Name of new file
+   * @param bool $overwrite
    * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
-   * @throws FileAlreadyExistsException|FileCannotCreatedException
+   * @throws FileAlreadyExistsException|FileNotFoundException|FileCannotCreatedException|FileCannotRemovedException
    * @since v0.0.4
    */
-  public static function makeFile(string $filename, bool $needResetStat = true): bool
+  public static function makeFile(string $filename, bool $overwrite = false, bool $needResetStat = true): bool
   {
     if (self::isFileExists($filename, $needResetStat)) {
+      if ($overwrite) {
+        return (self::removeFile($filename) && self::makeFile($filename));
+      }
+
       throw new FileAlreadyExistsException($filename);
     }
 
