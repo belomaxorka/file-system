@@ -14,6 +14,12 @@ use belomaxorka\Filesystem\Filesystem;
 final class FilesystemTest extends TestCase
 {
   /**
+   * Example content
+   */
+  const FOLDER_EXAMPLE = __DIR__ . '/example';
+  const FILE_EXAMPLE = self::FOLDER_EXAMPLE . '/example.txt';
+
+  /**
    * Filesystem object
    *
    * @var Filesystem
@@ -52,11 +58,21 @@ final class FilesystemTest extends TestCase
    */
   public function testMakeDir(): void
   {
-    $filename = __DIR__ . '/example_' . md5((string)time());
+    $this->assertTrue(self::$fileObject::makeDir(self::FOLDER_EXAMPLE));
+    $this->assertFileExists(self::FOLDER_EXAMPLE);
+  }
 
-    // Make folder
-    $this->assertTrue(self::$fileObject::makeDir($filename));
-    $this->assertFileExists($filename);
+  /**
+   * Make file check
+   *
+   * @return void
+   * @throws Exception
+   * @since 0.0.4
+   */
+  public function testMakeFile(): void
+  {
+    $this->assertTrue(self::$fileObject::makeFile(self::FILE_EXAMPLE));
+    $this->assertFileExists(self::FILE_EXAMPLE);
   }
 
   /**
@@ -68,8 +84,8 @@ final class FilesystemTest extends TestCase
    */
   public function testIsFileExists(): void
   {
-    $this->assertTrue(self::$fileObject::isFileExists(__FILE__));
-    $this->assertFalse(self::$fileObject::isFileExists(__DIR__));
+    $this->assertTrue(self::$fileObject::isFileExists(self::FILE_EXAMPLE));
+    $this->assertFalse(self::$fileObject::isFileExists(self::FOLDER_EXAMPLE));
     $this->assertFalse(self::$fileObject::isFileExists((string)random_int(10, 100)));
   }
 
@@ -82,8 +98,8 @@ final class FilesystemTest extends TestCase
    */
   public function testIsFolderExists(): void
   {
-    $this->assertTrue(self::$fileObject::isDirExists(__DIR__));
-    $this->assertFalse(self::$fileObject::isDirExists(__FILE__));
+    $this->assertTrue(self::$fileObject::isDirExists(self::FOLDER_EXAMPLE));
+    $this->assertFalse(self::$fileObject::isDirExists(self::FILE_EXAMPLE));
     $this->assertFalse(self::$fileObject::isDirExists((string)random_int(10, 100)));
   }
 
