@@ -6,6 +6,8 @@ use belomaxorka\Filesystem\Exceptions\FileAlreadyExistsException;
 use belomaxorka\Filesystem\Exceptions\FileCannotCreatedException;
 use belomaxorka\Filesystem\Exceptions\FileCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
+
+use belomaxorka\Filesystem\Exceptions\FolderCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
 
 use PHPUnit\Framework\TestCase;
@@ -159,6 +161,39 @@ final class FilesystemTest extends TestCase
   {
     $this->assertTrue(self::$fileObject::removeFile(self::FILE_EXAMPLE));
     $this->assertFileDoesNotExist(self::FILE_EXAMPLE);
+
+    // Make file again
+    $this->testMakeFile();
+  }
+
+  /**
+   * Remove folder with files check
+   *
+   * @return void
+   * @throws FileCannotRemovedException|FileNotFoundException|FolderNotFoundException|FolderCannotRemovedException
+   * @since 0.0.4
+   */
+  public function testRemoveDirRec(): void
+  {
+    $this->assertFalse(self::$fileObject::isDirEmpty(self::FOLDER_EXAMPLE));
+    $this->assertTrue(self::$fileObject::removeDir(self::FOLDER_EXAMPLE, true));
+    $this->assertFileDoesNotExist(self::FOLDER_EXAMPLE);
+
+    // Make dir again
+    $this->testMakeDir();
+  }
+
+  /**
+   * Remove folder check
+   *
+   * @return void
+   * @throws FolderCannotRemovedException|FileCannotRemovedException|FolderNotFoundException|FileNotFoundException
+   * @since 0.0.4
+   */
+  public function testRemoveDir(): void
+  {
+    $this->assertTrue(self::$fileObject::removeDir(self::FOLDER_EXAMPLE));
+    $this->assertFileDoesNotExist(self::FOLDER_EXAMPLE);
   }
 
   /**
