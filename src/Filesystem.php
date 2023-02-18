@@ -41,7 +41,7 @@ class Filesystem
    * Make file
    *
    * @param string $filename Name of new file
-   * @param bool $overwrite
+   * @param bool $overwrite Overwrite file if exists
    * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FileAlreadyExistsException|FileNotFoundException|FileCannotCreatedException|FileCannotRemovedException
