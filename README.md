@@ -45,6 +45,22 @@ public static function makeFile(string $filename, bool $overwrite = false, bool 
 public static function makeDir(string $dirname, int $mode = 0777, bool $needResetStat = true): bool
 ```
 
+### removeDir
+
+```php
+/**
+ * Remove folder
+ *
+ * @param string $dirname Name of target folder
+ * @param bool $recursively Remove sub-folders too
+ * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+ * @return bool
+ * @throws FolderNotFoundException|FileCannotRemovedException|FileNotFoundException|FolderCannotRemovedException
+ * @since v0.0.4
+ */
+public static function removeDir(string $dirname, bool $recursively = false, bool $needResetStat = true): bool
+```
+
 ### removeFile
 
 ```php
