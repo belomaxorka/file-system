@@ -12,6 +12,7 @@ use belomaxorka\Filesystem\Exceptions\FileCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FileNotFoundException;
 use belomaxorka\Filesystem\Exceptions\FileCannotCreatedException;
 
+use belomaxorka\Filesystem\Exceptions\FolderCannotRemovedException;
 use belomaxorka\Filesystem\Exceptions\FolderAlreadyExistsException;
 use belomaxorka\Filesystem\Exceptions\FolderCannotCreatedException;
 use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
@@ -51,7 +52,7 @@ class Filesystem
   {
     if (self::isFileExists($filename, $needResetStat)) {
       if ($overwrite) {
-        return (self::removeFile($filename) && self::makeFile($filename));
+        return (self::removeFile($filename, $needResetStat) && self::makeFile($filename, false, $needResetStat));
       }
 
       throw new FileAlreadyExistsException($filename);
@@ -85,6 +86,39 @@ class Filesystem
     }
 
     throw new FolderCannotCreatedException($dirname);
+  }
+
+  /**
+   * Remove folder
+   *
+   * @param string $dirname Name of target folder
+   * @param bool $recursively Remove sub-folders too
+   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   * @return bool
+   * @throws FolderNotFoundException|FileCannotRemovedException|FileNotFoundException|FolderCannotRemovedException
+   * @since v0.0.4
+   */
+  public static function removeDir(string $dirname, bool $recursively = false, bool $needResetStat = true): bool
+  {
+    if (!self::isDirEmpty($dirname, $needResetStat)) {
+      if ($recursively) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
+          if (!self::removeFile($object->getRealPath())) {
+            return false;
+          }
+        }
+
+        return self::removeDir($dirname, $needResetStat);
+      }
+
+      throw new FolderCannotRemovedException($dirname);
+    }
+
+    if (rmdir($dirname)) {
+      return true;
+    }
+
+    throw new FolderCannotRemovedException($dirname);
   }
 
   /**
