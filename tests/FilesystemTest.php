@@ -23,8 +23,8 @@ final class FilesystemTest extends TestCase
   /**
    * Example content
    */
-  const FOLDER_EXAMPLE = __DIR__ . '/example';
-  const FILE_EXAMPLE = self::FOLDER_EXAMPLE . '/example.txt';
+  private const FOLDER_EXAMPLE = __DIR__ . '/example';
+  private const FILE_EXAMPLE = self::FOLDER_EXAMPLE . '/example.txt';
 
   /**
    * Filesystem object

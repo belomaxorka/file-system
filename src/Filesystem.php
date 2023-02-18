@@ -315,12 +315,8 @@ class Filesystem
       clearstatcache();
     }
 
-    if (is_dir($dirname)) {
-      if (file_exists($dirname)) {
-        return true;
-      }
-
-      return false;
+    if (is_dir($dirname) && file_exists($dirname)) {
+      return true;
     }
 
     return false;
@@ -340,12 +336,8 @@ class Filesystem
       clearstatcache();
     }
 
-    if (is_file($filename)) {
-      if (file_exists($filename)) {
-        return true;
-      }
-
-      return false;
+    if (is_file($filename) && file_exists($filename)) {
+      return true;
     }
 
     return false;
