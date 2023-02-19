@@ -21,7 +21,7 @@ use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
  * PHP Filesystem - PHP library for file and directory management. Provides basic methods for the filesystem
  *
  * @author belomaxorka
- * @version v0.0.3
+ * @version v0.0.4
  * @link https://github.com/belomaxorka/file-system
  * @license MIT
  */

@@ -1,5 +1,24 @@
 # Change Log
 
+## [v0.0.4](https://github.com/torrentpier/torrentpier/tree/v0.0.4) (2023-02-19)
+
+[Full Changelog](https://github.com/torrentpier/torrentpier/compare/v0.0.3...v0.0.4)
+
+- Added makeFile method
+- Added removeDir method
+- Added $overwrite argument for makeFile method
+- Tests: testIsFileExists & testIsFolderExists
+- Tests: Minor adjustments & testMakeFile
+- Tests: testIsEmptyDir & testIsEmptyFile
+- Tests: testRemoveDirRec & testRemoveDir
+- Tests: testGetFileSize & testGetFolderSize
+- Tests: Replaced assertFile* with assertDirectory*
+- Tests: testRemoveFile
+- Tests: testGetFilesList
+- Tests: testMakeDir
+- Fixed incorrect Exception type used in makeDir method
+- Minor adjustments
+
 ## [v0.0.3](https://github.com/torrentpier/torrentpier/tree/v0.0.3) (2023-02-17)
 
 [Full Changelog](https://github.com/torrentpier/torrentpier/compare/v0.0.2...v0.0.3)
