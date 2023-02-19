@@ -151,6 +151,20 @@ final class FilesystemTest extends TestCase
   }
 
   /**
+   * Get file size check
+   *
+   * @return void
+   * @throws FileNotFoundException
+   * @since 0.0.4
+   */
+  public function testGetFileSize(): void
+  {
+    $this->assertTrue(self::$fileObject::isFileEmpty(self::FILE_EXAMPLE));
+    $this->assertIsInt(self::$fileObject::getFileSize(self::FILE_EXAMPLE));
+    $this->assertEquals(0, self::$fileObject::getFileSize(self::FILE_EXAMPLE));
+  }
+
+  /**
    * Remove file check
    *
    * @return void
@@ -161,20 +175,34 @@ final class FilesystemTest extends TestCase
   {
     $this->assertTrue(self::$fileObject::removeFile(self::FILE_EXAMPLE));
     $this->assertFileDoesNotExist(self::FILE_EXAMPLE);
+  }
 
-    // Make file again
-    $this->testMakeFile();
+  /**
+   * Get folder size check
+   *
+   * @return void
+   * @throws FolderNotFoundException
+   * @since 0.0.4
+   */
+  public function testGetFolderSize(): void
+  {
+    $this->assertTrue(self::$fileObject::isDirEmpty(self::FOLDER_EXAMPLE));
+    $this->assertIsInt(self::$fileObject::getDirSize(self::FOLDER_EXAMPLE));
+    $this->assertEquals(0, self::$fileObject::getDirSize(self::FOLDER_EXAMPLE));
   }
 
   /**
    * Remove folder with files check
    *
    * @return void
-   * @throws FileCannotRemovedException|FileNotFoundException|FolderNotFoundException|FolderCannotRemovedException
+   * @throws FolderNotFoundException|FolderCannotRemovedException|FileNotFoundException|FileAlreadyExistsException|FileCannotCreatedException|FileCannotRemovedException
    * @since 0.0.4
    */
   public function testRemoveDirRec(): void
   {
+    // Make file again
+    $this->testMakeFile();
+
     $this->assertFalse(self::$fileObject::isDirEmpty(self::FOLDER_EXAMPLE));
     $this->assertTrue(self::$fileObject::removeDir(self::FOLDER_EXAMPLE, true));
     $this->assertDirectoryDoesNotExist(self::FOLDER_EXAMPLE);
