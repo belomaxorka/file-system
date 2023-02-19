@@ -349,11 +349,7 @@ class Filesystem
       clearstatcache();
     }
 
-    if (is_dir($dirname) && file_exists($dirname)) {
-      return true;
-    }
-
-    return false;
+    return (is_dir($dirname) && file_exists($dirname));
   }
 
   /**
@@ -370,10 +366,6 @@ class Filesystem
       clearstatcache();
     }
 
-    if (is_file($filename) && file_exists($filename)) {
-      return true;
-    }
-
-    return false;
+    return (is_file($filename) && file_exists($filename));
   }
 }
