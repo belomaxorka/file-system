@@ -206,9 +206,6 @@ final class FilesystemTest extends TestCase
     $this->assertFalse(self::$fileObject::isDirEmpty(self::FOLDER_EXAMPLE));
     $this->assertTrue(self::$fileObject::removeDir(self::FOLDER_EXAMPLE, true));
     $this->assertDirectoryDoesNotExist(self::FOLDER_EXAMPLE);
-
-    // Make dir again
-    $this->testMakeDir();
   }
 
   /**
@@ -220,6 +217,10 @@ final class FilesystemTest extends TestCase
    */
   public function testRemoveDir(): void
   {
+    // Make dir again
+    $this->testMakeDir();
+
+    $this->assertTrue(self::$fileObject::isDirEmpty(self::FOLDER_EXAMPLE));
     $this->assertTrue(self::$fileObject::removeDir(self::FOLDER_EXAMPLE));
     $this->assertDirectoryDoesNotExist(self::FOLDER_EXAMPLE);
   }
