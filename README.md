@@ -23,12 +23,11 @@
  *
  * @param string $filename Name of new file
  * @param bool $overwrite Overwrite file if exists
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FileAlreadyExistsException|FileNotFoundException|FileCannotCreatedException|FileCannotRemovedException
  * @since v0.0.4
  */
-public static function makeFile(string $filename, bool $overwrite = false, bool $needResetStat = true): bool
+public static function makeFile(string $filename, bool $overwrite = false): bool
 ```
 
 ### makeDir
@@ -39,12 +38,11 @@ public static function makeFile(string $filename, bool $overwrite = false, bool 
  *
  * @param string $dirname Name of new folder
  * @param int $mode Permissions (Linux)
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FolderCannotRemovedException|FolderAlreadyExistsException
  * @since v0.0.2
  */
-public static function makeDir(string $dirname, int $mode = 0777, bool $needResetStat = true): bool
+public static function makeDir(string $dirname, int $mode = 0777): bool
 ```
 
 ### removeDir
@@ -55,12 +53,11 @@ public static function makeDir(string $dirname, int $mode = 0777, bool $needRese
  *
  * @param string $dirname Name of target folder
  * @param bool $recursively Remove sub-folders too
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FolderNotFoundException|FileCannotRemovedException|FileNotFoundException|FolderCannotRemovedException
  * @since v0.0.4
  */
-public static function removeDir(string $dirname, bool $recursively = false, bool $needResetStat = true): bool
+public static function removeDir(string $dirname, bool $recursively = false): bool
 ```
 
 ### removeFile
@@ -70,12 +67,11 @@ public static function removeDir(string $dirname, bool $recursively = false, boo
  * Remove file
  *
  * @param string $filename Name of target file
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FileCannotRemovedException|FileNotFoundException
  * @since v0.0.3
  */
-public static function removeFile(string $filename, bool $needResetStat = true): bool
+public static function removeFile(string $filename): bool
 ```
 
 ### getDirSize
@@ -86,12 +82,11 @@ public static function removeFile(string $filename, bool $needResetStat = true):
  *
  * @param string $dirname Name of target folder
  * @param bool $humanFormat Use human-readable file size
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return int|string
  * @throws FolderNotFoundException
  * @since v0.0.1
  */
-public static function getDirSize(string $dirname, bool $humanFormat = false, bool $needResetStat = true): int|string
+public static function getDirSize(string $dirname, bool $humanFormat = false): int|string
 ```
 
 ### getFileSize
@@ -102,12 +97,11 @@ public static function getDirSize(string $dirname, bool $humanFormat = false, bo
  *
  * @param string $filename Name of target file
  * @param bool $humanFormat Use human-readable file size
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return int|string
  * @throws FileNotFoundException
  * @since v0.0.2
  */
-public static function getFileSize(string $filename, bool $humanFormat = false, bool $needResetStat = true): int|string
+public static function getFileSize(string $filename, bool $humanFormat = false): int|string
 ```
 
 ### getListOfDirContents
@@ -118,12 +112,11 @@ public static function getFileSize(string $filename, bool $humanFormat = false, 
  *
  * @param string $dirname Name of target folder
  * @param bool $includeDirs Include folders in result
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return array
  * @throws FolderNotFoundException
  * @since v0.0.1
  */
-public static function getListOfDirContents(string $dirname, bool $includeDirs = false, bool $needResetStat = true): array
+public static function getListOfDirContents(string $dirname, bool $includeDirs = false): array
 ```
 
 ### humanFormatSize
@@ -147,12 +140,11 @@ public static function humanFormatSize(int $bytes, int $precision = null): strin
  * Return true if directory is writable
  *
  * @param string $dirname Name of target folder
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FolderNotFoundException
  * @since v0.0.3
  */
-public static function isDirWritable(string $dirname, bool $needResetStat = true): bool
+public static function isDirWritable(string $dirname): bool
 ```
 
 ### isDirReadable
@@ -162,12 +154,11 @@ public static function isDirWritable(string $dirname, bool $needResetStat = true
  * Return true if directory is readable
  *
  * @param string $dirname Name of target folder
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FolderNotFoundException
  * @since v0.0.3
  */
-public static function isDirReadable(string $dirname, bool $needResetStat = true): bool
+public static function isDirReadable(string $dirname): bool
 ```
 
 ### isFileWritable
@@ -177,12 +168,11 @@ public static function isDirReadable(string $dirname, bool $needResetStat = true
  * Return true if file is writable
  *
  * @param string $filename Name of target file
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FileNotFoundException
  * @since v0.0.3
  */
-public static function isFileWritable(string $filename, bool $needResetStat = true): bool
+public static function isFileWritable(string $filename): bool
 ```
 
 ### isFileReadable
@@ -192,12 +182,11 @@ public static function isFileWritable(string $filename, bool $needResetStat = tr
  * Return true if file is readable
  *
  * @param string $filename Name of target file
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FileNotFoundException
  * @since v0.0.3
  */
-public static function isFileReadable(string $filename, bool $needResetStat = true): bool
+public static function isFileReadable(string $filename): bool
 ```
 
 ### isDirEmpty
@@ -207,12 +196,11 @@ public static function isFileReadable(string $filename, bool $needResetStat = tr
  * Return true if directory is empty
  *
  * @param string $dirname Name of target folder
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FolderNotFoundException
  * @since v0.0.2
  */
-public static function isDirEmpty(string $dirname, bool $needResetStat = true): bool
+public static function isDirEmpty(string $dirname): bool
 ```
 
 ### isFileEmpty
@@ -222,12 +210,11 @@ public static function isDirEmpty(string $dirname, bool $needResetStat = true): 
  * Return true if file is empty
  *
  * @param string $filename Name of target file
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @throws FileNotFoundException
  * @since v0.0.2
  */
-public static function isFileEmpty(string $filename, bool $needResetStat = true): bool
+public static function isFileEmpty(string $filename): bool
 ```
 
 ### isDirExists
@@ -237,11 +224,10 @@ public static function isFileEmpty(string $filename, bool $needResetStat = true)
  * Return true if directory exists
  *
  * @param string $dirname Name of target folder
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @since v0.0.2
  */
-public static function isDirExists(string $dirname, bool $needResetStat = true): bool
+public static function isDirExists(string $dirname): bool
 ```
 
 ### isFileExists
@@ -251,11 +237,10 @@ public static function isDirExists(string $dirname, bool $needResetStat = true):
  * Return true if file exists
  *
  * @param string $filename Name of target file
- * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
  * @return bool
  * @since v0.0.2
  */
-public static function isFileExists(string $filename, bool $needResetStat = true): bool
+public static function isFileExists(string $filename): bool
 ```
 
 ## License
