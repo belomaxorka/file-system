@@ -28,6 +28,14 @@ use belomaxorka\Filesystem\Exceptions\FolderNotFoundException;
 class Filesystem
 {
   /**
+   * Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
+   *
+   * @since v0.0.5
+   * @var bool
+   */
+  public static bool $needResetStat = true;
+
+  /**
    * Params for humanFormatSize method
    *
    * @since v0.0.3
@@ -43,16 +51,15 @@ class Filesystem
    *
    * @param string $filename Name of new file
    * @param bool $overwrite Overwrite file if exists
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FileAlreadyExistsException|FileNotFoundException|FileCannotCreatedException|FileCannotRemovedException
    * @since v0.0.4
    */
-  public static function makeFile(string $filename, bool $overwrite = false, bool $needResetStat = true): bool
+  public static function makeFile(string $filename, bool $overwrite = false): bool
   {
-    if (self::isFileExists($filename, $needResetStat)) {
+    if (self::isFileExists($filename)) {
       if ($overwrite) {
-        return (self::removeFile($filename, $needResetStat) && self::makeFile($filename, false, $needResetStat));
+        return (self::removeFile($filename) && self::makeFile($filename));
       }
 
       throw new FileAlreadyExistsException($filename);
@@ -70,14 +77,13 @@ class Filesystem
    *
    * @param string $dirname Name of new folder
    * @param int $mode Permissions (Linux)
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderAlreadyExistsException|FolderCannotCreatedException
    * @since v0.0.2
    */
-  public static function makeDir(string $dirname, int $mode = 0777, bool $needResetStat = true): bool
+  public static function makeDir(string $dirname, int $mode = 0777): bool
   {
-    if (self::isDirExists($dirname, $needResetStat)) {
+    if (self::isDirExists($dirname)) {
       throw new FolderAlreadyExistsException($dirname);
     }
 
@@ -93,14 +99,13 @@ class Filesystem
    *
    * @param string $dirname Name of target folder
    * @param bool $recursively Remove sub-folders too
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderNotFoundException|FileCannotRemovedException|FileNotFoundException|FolderCannotRemovedException
    * @since v0.0.4
    */
-  public static function removeDir(string $dirname, bool $recursively = false, bool $needResetStat = true): bool
+  public static function removeDir(string $dirname, bool $recursively = false): bool
   {
-    if (!self::isDirEmpty($dirname, $needResetStat)) {
+    if (!self::isDirEmpty($dirname)) {
       if ($recursively) {
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
           if (!self::removeFile($object->getRealPath())) {
@@ -108,7 +113,7 @@ class Filesystem
           }
         }
 
-        return self::removeDir($dirname, $needResetStat);
+        return self::removeDir($dirname);
       }
 
       throw new FolderCannotRemovedException($dirname);
@@ -125,14 +130,13 @@ class Filesystem
    * Remove file
    *
    * @param string $filename Name of target file
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FileCannotRemovedException|FileNotFoundException
    * @since v0.0.3
    */
-  public static function removeFile(string $filename, bool $needResetStat = true): bool
+  public static function removeFile(string $filename): bool
   {
-    if (!self::isFileExists($filename, $needResetStat)) {
+    if (!self::isFileExists($filename)) {
       throw new FileNotFoundException($filename);
     }
 
@@ -148,16 +152,15 @@ class Filesystem
    *
    * @param string $dirname Name of target folder
    * @param bool $humanFormat Use human-readable file size
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return int|string
    * @throws FolderNotFoundException
    * @since v0.0.1
    */
-  public static function getDirSize(string $dirname, bool $humanFormat = false, bool $needResetStat = true): int|string
+  public static function getDirSize(string $dirname, bool $humanFormat = false): int|string
   {
     $bytesTotal = 0;
 
-    if (!self::isDirEmpty($dirname, $needResetStat)) {
+    if (!self::isDirEmpty($dirname)) {
       foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirname, FilesystemIterator::SKIP_DOTS)) as $object) {
         $bytesTotal += $object->getSize();
       }
@@ -171,14 +174,13 @@ class Filesystem
    *
    * @param string $filename Name of target file
    * @param bool $humanFormat Use human-readable file size
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return int|string
    * @throws FileNotFoundException
    * @since v0.0.2
    */
-  public static function getFileSize(string $filename, bool $humanFormat = false, bool $needResetStat = true): int|string
+  public static function getFileSize(string $filename, bool $humanFormat = false): int|string
   {
-    if (!self::isFileExists($filename, $needResetStat)) {
+    if (!self::isFileExists($filename)) {
       throw new FileNotFoundException($filename);
     }
 
@@ -190,16 +192,15 @@ class Filesystem
    *
    * @param string $dirname Name of target folder
    * @param bool $includeDirs Include folders in result
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return array
    * @throws FolderNotFoundException
    * @since v0.0.1
    */
-  public static function getListOfDirContents(string $dirname, bool $includeDirs = false, bool $needResetStat = true): array
+  public static function getListOfDirContents(string $dirname, bool $includeDirs = false): array
   {
     $filesArray = [];
 
-    if (!self::isDirEmpty($dirname, $needResetStat)) {
+    if (!self::isDirEmpty($dirname)) {
       foreach (new DirectoryIterator($dirname) as $file) {
         if ($file->isFile() || ($includeDirs && $file->isDir() && !$file->isDot())) {
           $filesArray[] = $file->getFilename();
@@ -231,14 +232,13 @@ class Filesystem
    * Return true if directory is writable
    *
    * @param string $dirname Name of target folder
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderNotFoundException
    * @since v0.0.3
    */
-  public static function isDirWritable(string $dirname, bool $needResetStat = true): bool
+  public static function isDirWritable(string $dirname): bool
   {
-    if (!self::isDirExists($dirname, $needResetStat)) {
+    if (!self::isDirExists($dirname)) {
       throw new FolderNotFoundException($dirname);
     }
 
@@ -249,14 +249,13 @@ class Filesystem
    * Return true if directory is readable
    *
    * @param string $dirname Name of target folder
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderNotFoundException
    * @since v0.0.3
    */
-  public static function isDirReadable(string $dirname, bool $needResetStat = true): bool
+  public static function isDirReadable(string $dirname): bool
   {
-    if (!self::isDirExists($dirname, $needResetStat)) {
+    if (!self::isDirExists($dirname)) {
       throw new FolderNotFoundException($dirname);
     }
 
@@ -267,14 +266,13 @@ class Filesystem
    * Return true if file is writable
    *
    * @param string $filename Name of target file
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FileNotFoundException
    * @since v0.0.3
    */
-  public static function isFileWritable(string $filename, bool $needResetStat = true): bool
+  public static function isFileWritable(string $filename): bool
   {
-    if (!self::isFileExists($filename, $needResetStat)) {
+    if (!self::isFileExists($filename)) {
       throw new FileNotFoundException($filename);
     }
 
@@ -285,14 +283,13 @@ class Filesystem
    * Return true if file is readable
    *
    * @param string $filename Name of target file
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FileNotFoundException
    * @since v0.0.3
    */
-  public static function isFileReadable(string $filename, bool $needResetStat = true): bool
+  public static function isFileReadable(string $filename): bool
   {
-    if (!self::isFileExists($filename, $needResetStat)) {
+    if (!self::isFileExists($filename)) {
       throw new FileNotFoundException($filename);
     }
 
@@ -303,14 +300,13 @@ class Filesystem
    * Return true if directory is empty
    *
    * @param string $dirname Name of target folder
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FolderNotFoundException
    * @since v0.0.2
    */
-  public static function isDirEmpty(string $dirname, bool $needResetStat = true): bool
+  public static function isDirEmpty(string $dirname): bool
   {
-    if (!self::isDirExists($dirname, $needResetStat)) {
+    if (!self::isDirExists($dirname)) {
       throw new FolderNotFoundException($dirname);
     }
 
@@ -321,14 +317,13 @@ class Filesystem
    * Return true if file is empty
    *
    * @param string $filename Name of target file
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @throws FileNotFoundException
    * @since v0.0.2
    */
-  public static function isFileEmpty(string $filename, bool $needResetStat = true): bool
+  public static function isFileEmpty(string $filename): bool
   {
-    if (!self::isFileExists($filename, $needResetStat)) {
+    if (!self::isFileExists($filename)) {
       throw new FileNotFoundException($filename);
     }
 
@@ -339,13 +334,12 @@ class Filesystem
    * Return true if directory exists
    *
    * @param string $dirname Name of target folder
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @since v0.0.2
    */
-  public static function isDirExists(string $dirname, bool $needResetStat = true): bool
+  public static function isDirExists(string $dirname): bool
   {
-    if ($needResetStat) {
+    if (self::$needResetStat) {
       clearstatcache();
     }
 
@@ -356,13 +350,12 @@ class Filesystem
    * Return true if file exists
    *
    * @param string $filename Name of target file
-   * @param bool $needResetStat Reset file stat cache (More: https://www.php.net/manual/en/function.clearstatcache.php)
    * @return bool
    * @since v0.0.2
    */
-  public static function isFileExists(string $filename, bool $needResetStat = true): bool
+  public static function isFileExists(string $filename): bool
   {
-    if ($needResetStat) {
+    if (self::$needResetStat) {
       clearstatcache();
     }
 
